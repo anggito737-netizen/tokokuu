@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f4f7f5">
+  <title>Tokoku — Retail Intelligence</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/style.css">
+  <link rel="stylesheet" href="assets/theme.css">
+</head>
+<body>
+  <main class="auth-screen" id="authScreen">
+    <section class="auth-card">
+      <a class="brand auth-brand" href="#" aria-label="Tokoku">
+        <span class="brand-mark"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M7 9.5 16 5l9 4.5v13L16 27l-9-4.5v-13Z"/><path d="m7.5 10 8.5 4.5 8.5-4.5M16 15v11"/></svg></span>
+        <span class="brand-copy"><b>tokoku<span>.</span></b><small>RETAIL INTELLIGENCE</small></span>
+      </a>
+      <div class="auth-intro"><div class="eyebrow"><span class="eyebrow-line"></span> TOKO DALAM GENGGAMAN</div><h1>Selamat datang</h1><p>Masuk untuk mengelola toko atau melihat aktivitas belanja Anda.</p></div>
+      <div class="auth-roles" role="tablist" aria-label="Jenis akses">
+        <button class="auth-role active" type="button" role="tab" aria-selected="true" data-auth-role="admin"><span>◫</span><span><b>Admin</b><small>Kelola toko</small></span></button>
+        <button class="auth-role" type="button" role="tab" aria-selected="false" data-auth-role="cashier"><span>▤</span><span><b>Kasir</b><small>POS &amp; pesanan</small></span></button>
+        <button class="auth-role" type="button" role="tab" aria-selected="false" data-auth-role="customer"><span>♙</span><span><b>Pelanggan</b><small>Profil dan transaksi pribadi</small></span></button>
+      </div>
+      <div class="auth-mode"><span id="authModeLabel">Masuk sebagai Admin / Kasir</span><button type="button" id="showRegister" hidden>Daftar pelanggan</button><button type="button" id="showLogin" hidden>Sudah punya akun? Masuk</button></div>
+      <form id="authForm" novalidate>
+        <div id="registerFields" hidden>
+          <label class="field-label" for="authName">Nama lengkap</label><input class="form-control" id="authName" maxlength="100" autocomplete="name" placeholder="Nama Anda">
+          <label class="field-label" for="authCity">Kota</label><input class="form-control" id="authCity" maxlength="50" autocomplete="address-level2" placeholder="Kota tempat tinggal">
+        </div>
+        <label class="field-label" for="authEmail">Email</label><input class="form-control" id="authEmail" type="email" maxlength="190" autocomplete="email" placeholder="nama@email.com" required>
+        <label class="field-label" for="authPassword">Kata sandi</label><input class="form-control" id="authPassword" type="password" minlength="10" autocomplete="current-password" placeholder="Minimal 10 karakter" required>
+        <p class="auth-error" id="authError" role="alert" hidden></p>
+        <button class="button button-primary auth-submit" id="authSubmit" type="submit">Masuk <span>→</span></button>
+      </form>
+      <p class="auth-footnote">Data transaksi ditampilkan langsung dari database toko. Tidak ada data contoh.</p>
+    </section>
+  </main>
+
+  <main class="customer-portal" id="customerPortal" hidden>
+    <header class="portal-topbar">
+      <a class="brand store-brand" href="#" aria-label="Tokoku Store"><span class="brand-mark"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M7 9.5 16 5l9 4.5v13L16 27l-9-4.5v-13Z"/><path d="m7.5 10 8.5 4.5 8.5-4.5M16 15v11"/></svg></span><span class="brand-copy"><b>tokoku<span>.</span></b><small>STORE</small></span></a>
+      <label class="store-header-search" for="storeSearch"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 4.2 4.2"/></svg><input id="storeSearch" type="search" placeholder="Cari produk..." autocomplete="off"></label>
+      <div class="store-header-actions">
+        <button class="store-header-cart" id="storeCartToggle" type="button" aria-label="Buka keranjang, 0 barang"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h2l2.2 11.1a2 2 0 0 0 2 1.6h8.5a2 2 0 0 0 1.9-1.4L21 8H6"/><circle cx="10" cy="20" r="1"/><circle cx="18" cy="20" r="1"/></svg><span class="store-cart-badge" id="storeCartHeaderCount">0</span></button>
+        <button class="store-header-profile" id="storeProfileToggle" type="button" aria-label="Lihat profil dan riwayat"><div class="avatar" id="portalAvatar">PL</div><span class="profile-copy"><b id="portalName">Pelanggan</b><small id="portalEmail"></small></span></button>
+        <button class="store-logout" id="portalLogout" type="button" aria-label="Keluar">Keluar</button>
+      </div>
+    </header>
+    <div class="portal-content">
+      <section class="store-welcome">
+        <div class="store-welcome-copy"><span class="store-eyebrow">TOKOKU · EVERYDAY, ELEVATED</span><h1>Halo, <span id="portalGreeting">Pelanggan</span>.</h1><p>Temukan pilihan favoritmu. Pilih varian yang tersedia, lalu kami siapkan untukmu.</p><a href="#storeCatalog" class="store-shop-link">Jelajahi koleksi <span>↓</span></a></div>
+        <div class="store-profile-card">
+          <div class="store-profile-card-top"><div class="avatar" id="profileAvatar">PL</div><span>MEMBER</span></div>
+          <div class="store-profile-card-name" id="profileName">—</div>
+          <div class="store-profile-card-email" id="profileEmail">—</div>
+          <div class="store-profile-card-meta"><span id="profileCity">—</span><span id="profileId">—</span></div>
+          <span class="category-badge reguler" id="customerCategoryBadge">Reguler</span>
+          <div class="wallet-balance-card">
+            <div><small>Saldo akun</small><strong id="walletBalance">Rp 0</strong></div>
+            <button class="button button-primary button-small" id="openWalletTopup" type="button">Top Up Saldo</button>
+          </div>
+          <p class="wallet-topup-status" id="walletTopupStatus">Top up akan masuk setelah diverifikasi admin.</p>
+        </div>
+      </section>
+      <section class="store-catalog-section" id="storeCatalog">
+        <div class="store-catalog-heading"><div><span class="store-eyebrow">DIPILIH UNTUKMU</span><h2>Koleksi produk</h2><p id="storeProductCaption">Pilihan berkualitas, siap menemani harimu.</p></div><div class="store-catalog-controls"><span class="store-result-count" id="storeProductCount">0 produk</span><select class="form-control" id="storeCategory" aria-label="Filter kategori"><option value="">Semua kategori</option></select></div></div>
+        <div class="product-grid store-product-grid" id="storeProducts"><div class="empty-state product-empty">Memuat katalog…</div></div>
+      </section>
+      <section class="panel table-panel portal-history store-history" id="storeHistory" tabindex="-1"><div class="table-toolbar"><div class="toolbar-title"><div><span class="store-eyebrow">AKTIVITAS AKUN</span><h2>Riwayat pesanan</h2></div><span class="count-pill" id="portalTransactionCount">0</span></div><button class="button button-secondary button-small" id="refreshPortalHistory" type="button">↻ Perbarui</button></div><div class="table-wrap"><table><thead><tr><th>ID PESANAN</th><th>TANGGAL</th><th>ITEM</th><th>PEMBAYARAN</th><th>STATUS</th><th class="right">TOTAL</th></tr></thead><tbody id="portalTransactionRows"><tr><td colspan="6" class="empty-state">Memuat riwayat…</td></tr></tbody></table></div></section>
+      <footer class="footer"><span>© 2026 Tokoku</span><span>Informasi akun Anda bersifat pribadi.</span></footer>
+    </div>
+    <div class="store-cart-overlay" id="storeCartOverlay" hidden></div>
+    <aside class="store-cart-drawer" id="storeCartDrawer" aria-hidden="true" aria-modal="false" role="dialog" aria-labelledby="storeCartTitle">
+      <div class="store-cart-drawer-header"><div><span class="store-eyebrow">TOKOKU CHECKOUT</span><h2 id="storeCartTitle">Keranjang <span class="count-pill" id="storeCartCount">0</span></h2></div><button class="store-cart-close" id="storeCartClose" type="button" aria-label="Tutup keranjang">×</button></div>
+      <p class="store-cart-caption">Pilihanmu, siap untuk checkout.</p>
+      <div id="storeCartItems" class="cart-items store-drawer-items"><div class="empty-state">Keranjang masih kosong.</div></div>
+      <div class="store-drawer-bottom"><div class="cart-total"><span>Total sementara</span><b id="storeCartTotal">Rp 0</b></div><label class="field-label" for="storePayment">Metode pembayaran</label><select class="form-control" id="storePayment"><option value="cod">Cash / COD</option><option value="bank">Transfer bank</option><option value="debit">Debit</option><option value="ovo">OVO</option><option value="dana">DANA</option><option value="gopay">GoPay</option><option value="qris">QRIS</option><option value="wallet">Saldo akun</option></select><p class="wallet-payment-hint">Saldo tersedia: <b id="storeWalletBalanceHint">Rp 0</b></p><button class="button button-primary checkout-button" id="storeCheckout" type="button" disabled>Checkout <span>→</span></button></div>
+    </aside>
+    <button class="store-floating-cart" id="storeFloatingCart" type="button" aria-label="Buka keranjang, 0 barang"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h2l2.2 11.1a2 2 0 0 0 2 1.6h8.5a2 2 0 0 0 1.9-1.4L21 8H6"/><circle cx="10" cy="20" r="1"/><circle cx="18" cy="20" r="1"/></svg><span>Keranjang</span><b id="storeFloatingCartCount">0</b></button>
+    <div class="modal-backdrop" id="walletTopupModal" aria-hidden="true">
+      <section class="modal" role="dialog" aria-modal="true" aria-labelledby="walletTopupTitle">
+        <div class="modal-heading">
+          <div><div class="panel-kicker">DOMPET TOKOKU</div><h2 id="walletTopupTitle">Top Up Saldo</h2></div>
+          <button class="icon-button wallet-topup-close" type="button" aria-label="Tutup">×</button>
+        </div>
+        <form id="walletTopupForm">
+          <label class="field-label" for="walletTopupAmount">Nominal top up</label>
+          <div class="quick-topup-amounts">
+            <button type="button" data-topup-amount="50000">Rp 50.000</button>
+            <button type="button" data-topup-amount="100000">Rp 100.000</button>
+            <button type="button" data-topup-amount="250000">Rp 250.000</button>
+            <button type="button" data-topup-amount="500000">Rp 500.000</button>
+          </div>
+          <input class="form-control" id="walletTopupAmount" type="number" min="10000" max="10000000" step="1000" value="50000" required>
+          <label class="field-label" for="walletTopupPayment">Metode pembayaran</label>
+          <select class="form-control" id="walletTopupPayment" required>
+            <option value="bank">Transfer bank</option><option value="qris">QRIS</option>
+            <option value="debit">Debit</option><option value="ovo">OVO</option>
+            <option value="dana">DANA</option><option value="gopay">GoPay</option>
+          </select>
+          <p class="wallet-topup-notice">Selesaikan pembayaran sesuai instruksi toko. Permintaan menunggu verifikasi admin; saldo belum bertambah sebelum disetujui.</p>
+          <div class="modal-actions">
+            <button class="button button-secondary wallet-topup-close" type="button">Batal</button>
+            <button class="button button-primary" type="submit">Ajukan Top Up</button>
+          </div>
+        </form>
+      </section>
+    </div>
+  </main>
+
+  <div class="app-shell" id="adminApp" hidden>
+    <aside class="sidebar" id="sidebar">
+      <a class="brand" href="#" aria-label="Tokoku dashboard">
+        <span class="brand-mark"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M7 9.5 16 5l9 4.5v13L16 27l-9-4.5v-13Z"/><path d="m7.5 10 8.5 4.5 8.5-4.5M16 15v11"/></svg></span>
+        <span class="brand-copy"><b>tokoku<span>.</span></b><small>RETAIL INTELLIGENCE</small></span>
+      </a>
+      <div class="nav-caption">WORKSPACE</div>
+      <nav class="main-nav" aria-label="Navigasi utama">
+        <button class="nav-item active" data-page="dashboard" data-admin-only><span class="nav-icon">◫</span><span>Overview</span></button>
+        <button class="nav-item" data-page="customers" data-admin-only><span class="nav-icon">♙</span><span>Pelanggan</span><span class="nav-dot"></span></button>
+        <button class="nav-item" data-page="products" data-admin-only><span class="nav-icon">▦</span><span>Produk &amp; stok</span></button>
+        <button class="nav-item" data-page="pos"><span class="nav-icon">＋</span><span>Kasir / POS</span></button>
+        <button class="nav-item" data-page="orders"><span class="nav-icon">▤</span><span>Pesanan online</span></button>
+        <button class="nav-item" data-page="wallets" data-admin-only><span class="nav-icon">◉</span><span>Saldo &amp; Top Up</span></button>
+        <button class="nav-item" data-page="reports" data-admin-only><span class="nav-icon">▤</span><span>Laporan</span></button>
+        <button class="nav-item" data-page="audit" data-admin-only><span class="nav-icon">◷</span><span>Audit log</span></button>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="help-card"><div class="help-spark">✦</div><b>Butuh bantuan?</b><p>Kelola toko lebih cerdas dengan Tokoku.</p><a href="#help">Pusat bantuan <span>↗</span></a></div>
+        <button class="nav-item settings-item" type="button"><span class="nav-icon">⚙</span><span>Pengaturan</span></button>
+        <div class="side-version"><span class="pulse"></span> Semua sistem normal <small>v1.0.0</small></div>
+      </div>
+    </aside>
+
+    <main class="main-area">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="icon-button menu-toggle" id="menuToggle" aria-label="Buka navigasi">☰</button>
+          <div class="breadcrumb"><span>Workspace</span><i>/</i><b id="pageBreadcrumb">Overview</b></div>
+        </div>
+        <div class="topbar-actions">
+          <span class="today-label" id="todayLabel"></span>
+          <button class="icon-button notification-button" aria-label="Notifikasi">♧<span></span></button>
+          <div class="profile">
+            <div class="avatar" id="adminAvatar">AD</div><div class="profile-copy"><b id="adminName">Admin Toko</b><small id="adminEmail">Administrator</small></div>
+            <button class="button button-secondary button-small" id="adminLogout" type="button">Keluar</button><span class="chevron">⌄</span>
+          </div>
+        </div>
+      </header>
+
+      <div class="content">
+        <section class="page-section active" id="page-dashboard">
+          <div class="page-heading">
+            <div><div class="eyebrow"><span class="eyebrow-line"></span> SELASA, <span id="headingDate"></span></div><h1>Selamat datang, Admin <span class="wave">✦</span></h1><p>Ini ringkasan performa toko Anda hari ini.</p></div>
+            <button class="button button-primary" data-go="pos"><span>＋</span> Transaksi baru</button>
+          </div>
+          <div class="metrics-grid">
+            <article class="metric-card"><div class="metric-top"><span>Total transaksi</span><span class="metric-icon cyan">↗</span></div><div class="metric-value" id="metricTransactions">—</div><div class="metric-foot"><span class="metric-muted">Seluruh transaksi</span><span class="metric-chip neutral">Realtime</span></div><div class="metric-glow glow-cyan"></div></article>
+            <article class="metric-card"><div class="metric-top"><span>Total pelanggan</span><span class="metric-icon violet">♙</span></div><div class="metric-value" id="metricCustomers">—</div><div class="metric-foot"><span class="metric-muted">Terdaftar di toko</span><span class="metric-chip positive">Aktif</span></div><div class="metric-glow glow-violet"></div></article>
+            <article class="metric-card"><div class="metric-top"><span>Total penjualan</span><span class="metric-icon blue">◈</span></div><div class="metric-value metric-money" id="metricSales">—</div><div class="metric-foot"><span class="metric-muted">Akumulasi penjualan</span><span class="metric-chip positive">Realtime</span></div><div class="metric-glow glow-blue"></div></article>
+          </div>
+          <div class="dashboard-grid">
+            <article class="panel sales-panel"><div class="panel-heading"><div><div class="panel-kicker">PERFORMA TOKO</div><h2>Tren penjualan</h2></div><span class="period-pill"><span class="pulse"></span> 7 hari terakhir</span></div><div class="chart-wrap"><canvas id="salesChart" aria-label="Grafik penjualan tujuh hari terakhir"></canvas><div class="chart-empty" id="salesChartEmpty" hidden>Belum ada transaksi dalam 7 hari terakhir.</div></div></article>
+            <article class="panel insight-panel"><div class="panel-heading"><div><div class="panel-kicker">RINGKASAN</div><h2>Insight hari ini</h2></div><span class="insight-icon">✧</span></div><div class="insight-body"><div class="insight-orb"><span>✦</span></div><h3>Data toko tersinkron</h3><p>Ringkasan ini terhubung langsung ke database transaksi Anda.</p><div class="insight-divider"></div><div class="insight-row"><span><i class="legend-dot cyan-dot"></i> Transaksi tercatat</span><b id="insightTransactions">—</b></div><div class="insight-row"><span><i class="legend-dot violet-dot"></i> Pelanggan terdaftar</span><b id="insightCustomers">—</b></div></div></article>
+          </div>
+          <article class="panel recent-panel"><div class="panel-heading"><div><div class="panel-kicker">AKTIVITAS TERBARU</div><h2>Transaksi terakhir</h2></div><button class="text-button" data-go="reports">Lihat laporan <span>→</span></button></div><div class="table-wrap"><table><thead><tr><th>ID TRANSAKSI</th><th>PELANGGAN</th><th>TANGGAL</th><th class="right">TOTAL</th></tr></thead><tbody id="recentTransactions"><tr><td colspan="4" class="empty-state">Memuat transaksi…</td></tr></tbody></table></div></article>
+        </section>
+
+        <section class="page-section" id="page-customers">
+          <div class="page-heading"><div><div class="eyebrow"><span class="eyebrow-line"></span> RELATIONSHIP MANAGEMENT</div><h1>Data pelanggan</h1><p>Kenali pelanggan dan bangun hubungan lebih dekat.</p></div><button class="button button-primary" id="addCustomer"><span>＋</span> Tambah pelanggan</button></div>
+          <div class="panel table-panel"><div class="table-toolbar"><div class="toolbar-title"><h2>Semua pelanggan</h2><span class="count-pill" id="customerCount">0</span></div><label class="search-box"><span>⌕</span><input id="customerSearch" type="search" placeholder="Cari nama atau kota..." autocomplete="off"></label></div><div class="table-wrap"><table><thead><tr><th>PELANGGAN</th><th>KOTA</th><th>TRANSAKSI</th><th>TOTAL BELANJA</th><th>KATEGORI</th><th></th></tr></thead><tbody id="customerRows"><tr><td colspan="6" class="empty-state">Memuat pelanggan…</td></tr></tbody></table></div><div class="pagination" id="customerPagination"></div></div>
+          <div class="note-strip"><span>✧</span> Kategori pelanggan dihitung otomatis dari total belanja melalui <code>KategoriBelanja()</code>.</div>
+        </section>
+
+        <section class="page-section" id="page-pos">
+          <div class="page-heading"><div><div class="eyebrow"><span class="eyebrow-line"></span> POINT OF SALE</div><h1>Kasir / POS</h1><p>Harga dan diskon diambil dari katalog aktif; kasir tidak dapat mengubahnya.</p></div><span class="live-pill"><i></i> Stok sinkron</span></div>
+          <div class="pos-store-layout"><section class="panel storefront-panel"><div class="table-toolbar"><div><div class="panel-kicker">KATALOG AKTIF</div><h2>Pilih barang</h2></div><input class="form-control store-search" id="posSearch" type="search" placeholder="Cari produk..."></div><div class="product-grid" id="posProducts"><div class="empty-state">Memuat produk…</div></div></section>
+            <aside class="panel cart-panel"><div class="panel-kicker">TRANSAKSI KASIR</div><h2>Keranjang <span class="count-pill" id="posCartCount">0</span></h2><div id="posCustomerField"><label class="field-label" for="posCustomer">Pelanggan <span class="optional">opsional</span></label><select class="form-control" id="posCustomer"><option value="">Pelanggan umum</option></select></div><div id="posCartItems" class="cart-items"><div class="empty-state">Belum ada barang.</div></div><div class="cart-breakdown"><div><span>Subtotal</span><b id="posSubtotal">Rp 0</b></div><div><span>Diskon</span><b id="posDiscount">− Rp 0</b></div><div><span>Pajak</span><b id="posTax">Rp 0</b></div></div><div class="cart-total"><span>Total bayar</span><b id="posTotal">Rp 0</b></div><label class="field-label" for="posPayment">Metode pembayaran</label><select class="form-control" id="posPayment"><option value="cod">Cash</option><option value="debit">Debit</option><option value="bank">Transfer bank</option><option value="qris">QRIS</option></select><button class="button button-primary checkout-button" id="posCheckout" type="button">Selesaikan transaksi <span>→</span></button></aside>
+          </div>
+          <div class="note-strip"><span>♧</span> Diskon, pajak, total, harga, dan stok divalidasi ulang di server serta database.</div>
+        </section>
+
+        <section class="page-section" id="page-products">
+          <div class="page-heading"><div><div class="eyebrow"><span class="eyebrow-line"></span> KATALOG &amp; INVENTORI</div><h1>Produk &amp; stok</h1><p>Kelola barang yang tampil di toko dan penjualan POS.</p></div><button class="button button-primary" id="addProduct"><span>＋</span> Tambah produk</button></div>
+          <div class="panel table-panel"><div class="table-toolbar"><div class="toolbar-title"><h2>Produk aktif</h2><span class="count-pill" id="productCount">0</span></div><label class="switch-label" for="includeArchivedProducts"><input id="includeArchivedProducts" type="checkbox"><span>Tampilkan produk arsip</span></label><label class="search-box"><span>⌕</span><input id="productSearch" type="search" placeholder="Cari nama atau kategori..."></label></div><div class="table-wrap"><table><thead><tr><th>PRODUK</th><th>KATEGORI / UKURAN</th><th>HARGA</th><th>TOTAL STOK</th><th>DISKON</th><th>STATUS</th><th></th></tr></thead><tbody id="productRows"><tr><td colspan="7" class="empty-state">Memuat katalog…</td></tr></tbody></table></div></div>
+        </section>
+
+        <section class="page-section" id="page-orders">
+          <div class="page-heading"><div><div class="eyebrow"><span class="eyebrow-line"></span> PESANAN ONLINE</div><h1>Pesanan masuk</h1><p>Konfirmasi, proses, atau selesaikan pesanan dari storefront pelanggan.</p></div><button class="button button-secondary" id="refreshOrders">↻ Perbarui</button></div>
+          <div class="panel table-panel"><div class="table-toolbar"><div class="toolbar-title"><h2>Pesanan terbaru</h2><span class="count-pill" id="ordersCount">0</span></div><label class="field-label inline-field" for="ordersFilter">Status<select class="form-control" id="ordersFilter"><option value="">Semua</option><option value="pending">Pending</option><option value="paying">Membayar</option><option value="processing">Diproses</option><option value="completed">Selesai</option><option value="cancelled">Dibatalkan</option></select></label></div><div class="table-wrap"><table><thead><tr><th>PESANAN</th><th>PELANGGAN</th><th>PEMBAYARAN</th><th>STATUS</th><th>TANGGAL</th><th class="right">TOTAL</th><th></th></tr></thead><tbody id="ordersRows"><tr><td colspan="7" class="empty-state">Memuat pesanan…</td></tr></tbody></table></div></div>
+        </section>
+
+        <section class="page-section" id="page-wallets" data-admin-only>
+          <div class="page-heading"><div><div class="eyebrow"><span class="eyebrow-line"></span> DOMPET PELANGGAN</div><h1>Saldo &amp; Top Up</h1><p>Verifikasi pembayaran top up dan pantau saldo pelanggan.</p></div><button class="button button-secondary" id="refreshWalletAdmin" type="button">↻ Perbarui</button></div>
+          <div class="metrics-grid wallet-admin-metrics">
+            <article class="metric-card"><div class="metric-top"><span>Total saldo pelanggan</span><span class="metric-icon green">◉</span></div><div class="metric-value metric-money" id="walletTotalBalance">Rp 0</div><div class="metric-foot"><span class="metric-muted">Saldo yang tersimpan</span></div></article>
+            <article class="metric-card"><div class="metric-top"><span>Penjualan online via saldo</span><span class="metric-icon blue">↗</span></div><div class="metric-value metric-money" id="walletSalesTotal">Rp 0</div><div class="metric-foot"><span class="metric-muted">Total transaksi saldo</span></div></article>
+            <article class="metric-card"><div class="metric-top"><span>Top up menunggu</span><span class="metric-icon violet">◷</span></div><div class="metric-value" id="walletPendingCount">0</div><div class="metric-foot"><span class="metric-muted">Perlu verifikasi admin</span></div></article>
+          </div>
+          <div class="panel table-panel">
+            <div class="table-toolbar"><div class="toolbar-title"><h2>Permintaan top up</h2><span class="count-pill" id="walletTopupCount">0</span></div><span class="table-caption">Verifikasi pembayaran di kanal terkait sebelum menyetujui.</span></div>
+            <div class="table-wrap"><table><thead><tr><th>ID</th><th>PELANGGAN</th><th>NOMINAL</th><th>METODE</th><th>STATUS</th><th>WAKTU</th><th class="right">TINDAKAN</th></tr></thead><tbody id="walletTopupRows"><tr><td colspan="7" class="empty-state">Memuat permintaan top up…</td></tr></tbody></table></div>
+          </div>
+        </section>
+
+        <section class="page-section" id="page-reports">
+          <div class="page-heading"><div><div class="eyebrow"><span class="eyebrow-line"></span> BUSINESS INTELLIGENCE</div><h1>Laporan & analytics</h1><p>Telusuri transaksi dan ekspor laporan penjualan.</p></div><button class="button button-secondary" id="exportCsv"><span>⇩</span> Ekspor Excel / CSV</button></div>
+          <div class="panel table-panel"><div class="table-toolbar report-toolbar"><div class="toolbar-title"><h2>Laporan transaksi</h2><span class="count-pill" id="reportCount">0</span></div><div class="filter-group"><label>Dari <input type="date" id="dateFrom"></label><label>Sampai <input type="date" id="dateTo"></label><button class="button button-small" id="applyDateFilter">Terapkan</button><button class="button button-small button-quiet" id="printReport" title="Cetak atau simpan sebagai PDF">PDF / Cetak</button></div></div><div class="report-totals"><div><span>Total transaksi</span><b id="reportSalesTotal">Rp 0</b></div><div><span>Rata-rata transaksi</span><b id="reportAverage">Rp 0</b></div></div><div class="table-wrap"><table><thead><tr><th>ID TRANSAKSI</th><th>TANGGAL</th><th>PELANGGAN</th><th>KOTA</th><th class="right">TOTAL BELANJA</th></tr></thead><tbody id="reportRows"><tr><td colspan="5" class="empty-state">Memuat laporan…</td></tr></tbody></table></div><div class="pagination" id="reportPagination"></div></div>
+          <div class="note-strip"><span>⌁</span> Data bersumber dari <code>view_laporan_transaksi</code> dan difilter berdasarkan rentang tanggal.</div>
+        </section>
+
+        <section class="page-section" id="page-audit">
+          <div class="page-heading"><div><div class="eyebrow"><span class="eyebrow-line"></span> DATA GOVERNANCE</div><h1>Audit log</h1><p>Jejak perubahan pelanggan tercatat otomatis oleh database.</p></div><span class="live-pill"><i></i> Sinkron database</span></div>
+          <div class="audit-summary"><div class="audit-summary-icon">◷</div><div><b>Transparansi setiap perubahan</b><p>Insert/update dicatat trigger database; penghapusan tanpa histori dicatat API ke dua tabel audit.</p></div><button class="button button-secondary button-small" id="refreshLogs">↻ Perbarui</button></div>
+          <div class="panel table-panel"><div class="table-toolbar"><div class="toolbar-title"><h2>Aktivitas terbaru</h2><span class="count-pill" id="auditCount">0</span></div><span class="table-caption">Maks. 100 catatan terbaru</span></div><div class="table-wrap"><table><thead><tr><th>WAKTU</th><th>AKSI</th><th>ID PELANGGAN</th><th>DETAIL</th><th>SUMBER LOG</th></tr></thead><tbody id="auditRows"><tr><td colspan="5" class="empty-state">Memuat log…</td></tr></tbody></table></div></div>
+          <div class="note-strip"><span>✧</span> Sumber data: <code>log_pelanggan</code> dan <code>log_perubahan_pelanggan</code>.</div>
+        </section>
+        <footer class="footer"><span>© 2026 Tokoku Retail Intelligence</span><span>Dibuat untuk operasional yang lebih cerdas <i>✦</i></span></footer>
+      </div>
+    </main>
+  </div>
+
+  <div class="modal-backdrop" id="customerModal" aria-hidden="true"><section class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><div class="modal-heading"><div><div class="panel-kicker">CUSTOMER PROFILE</div><h2 id="modalTitle">Tambah pelanggan</h2></div><button class="icon-button modal-close" type="button" aria-label="Tutup">×</button></div><form id="customerForm"><input type="hidden" id="customerId"><label class="field-label" for="customerName">Nama pelanggan</label><input class="form-control" id="customerName" maxlength="100" placeholder="Contoh: Nadia Putri" required><label class="field-label" for="customerCity">Kota</label><input class="form-control" id="customerCity" maxlength="50" placeholder="Contoh: Jakarta"><div class="modal-actions"><button class="button button-secondary modal-close" type="button">Batal</button><button class="button button-primary" type="submit">Simpan pelanggan</button></div></form></section></div>
+  <div class="modal-backdrop" id="productModal" aria-hidden="true">
+    <section class="modal modal-wide" role="dialog" aria-modal="true" aria-labelledby="productModalTitle">
+      <div class="modal-heading">
+        <div><div class="panel-kicker">KATALOG &amp; VARIAN</div><h2 id="productModalTitle">Tambah produk</h2></div>
+        <button class="icon-button product-modal-close" type="button" aria-label="Tutup">×</button>
+      </div>
+      <form id="productForm">
+        <input type="hidden" id="productId">
+        <label class="field-label" for="productName">Nama produk</label>
+        <input class="form-control" id="productName" maxlength="150" placeholder="Contoh: Nike Air Force 1 '07 Black" required>
+        <label class="field-label" for="productCategory">Kategori</label>
+        <input class="form-control" id="productCategory" maxlength="80" placeholder="Contoh: Sepatu Nike, Pakaian, Aksesori" aria-describedby="productCategoryHint" required>
+        <small class="table-caption" id="productCategoryHint">Kategori berupa teks bebas; Admin dapat mengisi nama sesuai kebutuhan (maksimal 80 karakter).</small>
+        <label class="field-label" for="productPrice">Harga (Rp)</label>
+        <input class="form-control" id="productPrice" type="number" min="0" step="100" required>
+        <div class="variant-builder">
+          <div>
+            <div class="panel-kicker">VARIAN &amp; STOK</div>
+            <p class="table-caption">Buat pilihan seperti ukuran, warna, model, atau isi. Setiap varian memiliki stok tersendiri.</p>
+          </div>
+          <div class="variant-add-controls">
+            <label><span>Nama varian baru</span><input class="form-control" id="productVariantSizes" placeholder="36, 37 / Merah, Biru / 250 ml"></label>
+            <label><span>Stok awal tiap varian</span><input class="form-control" id="productVariantDefaultStock" type="number" min="0" value="10"></label>
+            <button class="button button-secondary button-small" id="generateVariants" type="button">＋ Tambah varian</button>
+          </div>
+          <div class="variant-edit-list">
+            <div class="variant-edit-header"><span>NAMA VARIAN</span><span>STOK</span><span>STATUS</span><span></span></div>
+            <div id="productVariantRows"></div>
+          </div>
+        </div>
+        <label class="field-label" for="productImageFile">Unggah gambar (JPG, PNG, WebP; maks. 5 MB)</label>
+        <input class="form-control" id="productImageFile" type="file" accept="image/jpeg,image/png,image/webp">
+        <div class="product-image-preview-box" id="productImagePreviewBox" hidden><img id="productImagePreview" alt="Pratinjau gambar produk"><span id="productImagePreviewLabel"></span></div>
+        <label class="field-label" for="productImage">Atau URL gambar (opsional)</label>
+        <input class="form-control" id="productImage" type="url" maxlength="500" placeholder="https://...">
+        <div class="product-form-grid">
+          <div><label class="field-label" for="productDiscount">Diskon (%)</label><input class="form-control" id="productDiscount" type="number" min="0" max="100" step="0.01" value="0"></div>
+          <label class="switch-label" for="productDiscountActive"><input id="productDiscountActive" type="checkbox"><span>Diskon aktif</span></label>
+        </div>
+        <label class="switch-label product-active-label" for="productActive"><input id="productActive" type="checkbox" checked><span>Tampilkan di katalog</span></label>
+        <div class="modal-actions"><button class="button button-secondary product-modal-close" type="button">Batal</button><button class="button button-primary" type="submit">Simpan produk</button></div>
+      </form>
+    </section>
+  </div>
+  <div class="toast-region" id="toastRegion" aria-live="polite"></div>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+  <script src="assets/app.js"></script>
+</body>
+</html>
